@@ -77,8 +77,13 @@ const EunicePaivaLanding = () => {
     });
   };
 
-  const handleWhatsApp = () => {
-    const message = `Olá Eunice! Me chamo ${formData.name}. ${formData.message || 'Gostaria de agendar uma conversa inicial.'}`;
+  const handleWhatsApp = (useName = true) => {
+    let message;
+    if (useName && formData.name.trim()) {
+      message = `Olá Eunice! Me chamo ${formData.name}. ${formData.message || 'Gostaria de agendar uma conversa inicial.'}`;
+    } else {
+      message = `Olá Eunice! Gostaria de agendar uma conversa inicial.`;
+    }
     const whatsappUrl = `https://wa.me/5581998791949?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     setFormSuccess(true);
@@ -123,7 +128,7 @@ const EunicePaivaLanding = () => {
                 >
                   <span className="absolute inset-0 bg-white opacity-0 active:opacity-10 transition-opacity duration-300 rounded-full pointer-events-none" />
                   
-                  Quero conversar com a Eunice
+                  Quero conversar com Eunice
                 </button>
                 <button 
                   onClick={() => {
@@ -551,26 +556,6 @@ const EunicePaivaLanding = () => {
                 />
               </div>
               <div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Seu melhor e-mail para contato"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="WhatsApp com DDD"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
-              <div>
                 <textarea
                   name="message"
                   placeholder="Conte brevemente o que está sentindo, ou como posso te ajudar..."
@@ -582,7 +567,7 @@ const EunicePaivaLanding = () => {
               </div>
               
               <button 
-                onClick={handleWhatsApp}
+                onClick={() => handleWhatsApp(true)}
                 className="bg-green-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-green-600 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 w-full"
               >
                 <MessageCircle size={20} />
@@ -638,7 +623,7 @@ const EunicePaivaLanding = () => {
       {/* Adicionar botão flutuante do WhatsApp no final do return principal */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
-          onClick={handleWhatsApp}
+          onClick={() => handleWhatsApp(false)}
           className="bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg p-4 flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-400"
           aria-label="Agendar conversa no WhatsApp"
         >
