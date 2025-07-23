@@ -651,7 +651,7 @@ const EunicePaivaLanding = () => {
               </div>
             </div>
             <p className="text-gray-400 text-sm">
-              © 2025 Eunice Paiva. Todos os direitos reservados. • CRP XX/XXXXX
+              © 2025 Eunice Paiva. Todos os direitos reservados.
             </p>
           </div>
         </footer>
