@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 const EunicePaivaLanding = () => {
   const [activeStory, setActiveStory] = useState<null | typeof stories[0]>(null);
+  const [activeStoryIndex, setActiveStoryIndex] = useState<number>(0);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -57,11 +58,11 @@ const EunicePaivaLanding = () => {
       text: "Foram anos tentando, mas foi através da terapia com a Eunice que eu finalmente consegui abrir meu coração. Ela me ajudou a perdoar, a me libertar."
     },
     {
-      name: "Ana, 42 anos",
+      name: "Sofia, 42 anos",
       text: "Eunice me ensinou que toda vez que eu arrumava a mala, sentia que estava indo embora de novo. Hoje consigo viajar em paz com minha família."
     },
     {
-      name: "Carla, 38 anos",
+      name: "Clara, 38 anos",
       text: "Foi a primeira vez que me senti viva de novo. Foi leve, foi bom. Eu também mereço comemorar minha própria vida."
     }
   ];
@@ -88,6 +89,23 @@ const EunicePaivaLanding = () => {
     window.open(whatsappUrl, '_blank');
     setFormSuccess(true);
     setTimeout(() => setFormSuccess(false), 3000);
+  };
+
+  const handleStoryModal = (story: typeof stories[0], index: number) => {
+    setActiveStory(story);
+    setActiveStoryIndex(index);
+  };
+
+  const navigateStory = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      const newIndex = (activeStoryIndex - 1 + stories.length) % stories.length;
+      setActiveStoryIndex(newIndex);
+      setActiveStory(stories[newIndex]);
+    } else {
+      const newIndex = (activeStoryIndex + 1) % stories.length;
+      setActiveStoryIndex(newIndex);
+      setActiveStory(stories[newIndex]);
+    }
   };
 
   // Adicionar handlers de swipe para o carousel mobile
@@ -220,7 +238,7 @@ const EunicePaivaLanding = () => {
                             {story.preview}
                           </p>
                           <button
-                            onClick={() => setActiveStory(story)}
+                            onClick={() => handleStoryModal(story, i)}
                             className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-2 transition-colors"
                           >
                             Veja como ela transformou sua história
@@ -261,7 +279,7 @@ const EunicePaivaLanding = () => {
                     {story.preview}
                   </p>
                   <button
-                    onClick={() => setActiveStory(story)}
+                    onClick={() => handleStoryModal(story, i)}
                     className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-2 transition-colors"
                   >
                     Veja como ela transformou sua história
@@ -280,9 +298,10 @@ const EunicePaivaLanding = () => {
             onClick={() => setActiveStory(null)}
           >
             <div
-              className="bg-white rounded-2xl max-w-2xl max-h-[80vh] overflow-y-auto p-8"
+              className="bg-white rounded-2xl max-w-2xl max-h-[80vh] overflow-y-auto p-8 relative"
               onClick={e => e.stopPropagation()}
             >
+              
               <h3 className="text-2xl font-serif text-gray-800 mb-4">
                 {activeStory.title}
               </h3>
@@ -295,6 +314,46 @@ const EunicePaivaLanding = () => {
                   "{activeStory.outcome}"
                 </p>
               </div>
+              
+              {/* Indicadores de progresso */}
+              {stories.length > 1 && (
+                <div className="flex justify-center gap-2 mb-6">
+                  {stories.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`w-2 h-2 rounded-full transition-colors ${i === activeStoryIndex ? 'bg-purple-600' : 'bg-purple-200'}`}
+                      onClick={() => {
+                        setActiveStoryIndex(i);
+                        setActiveStory(stories[i]);
+                      }}
+                      aria-label={`Ver história ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+              
+              {/* Indicadores de navegação para mobile */}
+              {stories.length > 1 && (
+                <div className="flex justify-between items-center mb-4 text-xs text-gray-500">
+                  <span>História {activeStoryIndex + 1} de {stories.length}</span>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => navigateStory('prev')}
+                      className="px-2 py-1 rounded text-purple-600 hover:bg-purple-50 transition-colors"
+                    >
+                      ← Anterior
+                    </button>
+                    <span className="text-gray-300">|</span>
+                    <button
+                      onClick={() => navigateStory('next')}
+                      className="px-2 py-1 rounded text-purple-600 hover:bg-purple-50 transition-colors"
+                    >
+                      Próxima →
+                    </button>
+                  </div>
+                </div>
+              )}
+              
               <button
                 onClick={() => setActiveStory(null)}
                 className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition-colors"
@@ -371,6 +430,7 @@ const EunicePaivaLanding = () => {
                             </div>
                             <div>
                               <p className="font-semibold text-gray-800">{testimonial.name}</p>
+                              <p className="text-xs text-gray-500 italic mt-1">usamos nomes fictícios, para não expor as mulheres</p>
                             </div>
                           </div>
                         </div>
@@ -415,6 +475,7 @@ const EunicePaivaLanding = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-gray-800">{testimonial.name}</p>
+                      <p className="text-xs text-gray-500 italic mt-1">usamos nomes fictícios, para não expor as pessoas</p>
                     </div>
                   </div>
                 </motion.div>
